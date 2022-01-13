@@ -32,7 +32,7 @@ describe('Work with basic elements', () => {
         cy.get('#resultado').should('have.text', 'Voltou!');
     });
 
-    it.only('TextFields', () => {
+    it.skip('TextFields', () => {
         cy.get('#formNome').type('Curso Cypress')
         cy.get('#formNome').should('have.value', 'Curso Cypress')
         cy.get('#elementosForm\\:sugestoes')
@@ -53,4 +53,46 @@ describe('Work with basic elements', () => {
                 .type('Erro{selectall}Escrever', {delay: 300})
                 .should('have.value', 'Escrever')
     });
+
+    it.skip('RadioButton', () => {
+        cy.get('#formSexoMasc')
+            .click()
+            .should('to.checked')
+
+        cy.get('#formSexoFem').should('to.be.not.checked')
+
+        cy.get('[name=formSexo]').should('to.have.length', 2)
+        
+    });
+
+    it.only('CheckBox', () => {
+        cy.get('[id=formComidaFrango]')
+            .click()
+            .should('be.checked')
+            .reload()
+         
+        //Usar o objeto multiple para conseguir clicar em varios CheckBox ao mesmo tempo    
+        cy.get('[name=formComidaFavorita]').click({multiple:true})  
+        
+        cy.get('[id=formComidaPizza]').should('to.be.checked')
+    });
+
+    it.only('ComboBox', () => {
+        cy.get('[data-test=dataEscolaridade]')
+            .select('especializacao')
+            .should('to.have.value','especializacao')
+
+        cy.get('[data-test=dataEscolaridade]')
+            .should('not.be.have.value','doutorado')   
+            
+        //TODO Validar as opções que tem no combobox    
+    });
+
+    it.only('', () => {
+        cy.get('[data-testid=dataEsportes]')
+            .select(['futebol', 'Karate'])
+
+        //TODO validar opções selecionadas do combo multiplo
+    });
+
 })
