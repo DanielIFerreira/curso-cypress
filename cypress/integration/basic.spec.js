@@ -13,7 +13,9 @@ describe('Cypress basics', () =>{
             .should('to.eq', 'Campo de Treinamento')
             .and('contain', 'Treinamento');
 
-            //TODO imprimir o title no console
+        cy.title().should(title =>{
+            console.log(title)
+        })
 
     });
 

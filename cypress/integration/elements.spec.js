@@ -88,7 +88,7 @@ describe('Work with basic elements', () => {
         //TODO Validar as opções que tem no combobox    
     });
 
-    it.only('', () => {
+    it.only('Combo multiplo', () => {
         cy.get('[data-testid=dataEsportes]')
             .select(['futebol', 'Karate'])
 
