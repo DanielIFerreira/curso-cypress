@@ -4,7 +4,7 @@ describe('Cypress basics', () =>{
     it.only('Should visit a page and aserrt title', () => {
         cy.visit('https://wcaquino.me/cypress/componentes.html');
 
-        cy.pause()
+        //cy.pause()
 
         cy.title().should('to.eq', 'Campo de Treinamento');
         cy.title().should('contain', 'Treinamento').debug();
@@ -12,9 +12,16 @@ describe('Cypress basics', () =>{
         cy.title()
             .should('to.eq', 'Campo de Treinamento')
             .and('contain', 'Treinamento');
+        let pegandoAVariavel
+        cy.title().then(title =>{
+            //console.log(title)
+            cy.get('#formNome').type(title)
+                .should('have.value', 'Campo de Treinamento')
+            pegandoAVariavel = title
+        })
 
-        cy.title().should(title =>{
-            console.log(title)
+        cy.get('#elementosForm\\:sugestoes').then(($el) =>{
+            cy.wrap($el).type(pegandoAVariavel)
         })
 
     });

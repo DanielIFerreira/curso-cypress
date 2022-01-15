@@ -81,18 +81,36 @@ describe('Work with basic elements', () => {
         cy.get('[data-test=dataEscolaridade]')
             .select('especializacao')
             .should('to.have.value','especializacao')
-
+        
         cy.get('[data-test=dataEscolaridade]')
-            .should('not.be.have.value','doutorado')   
-            
-        //TODO Validar as opções que tem no combobox    
+            .should('not.be.have.value','doutorado')  
+        
+        //Para verificar os elementos de uma lista
+        cy.get('[data-test=dataEscolaridade] option')
+        .should('have.length', 8)
+        cy.get('[data-test=dataEscolaridade] option').then($arr =>{
+            const values = []
+            $arr.each(function () {
+                values.push(this.innerHTML)
+            })
+            expect(values).to.include.members(["Superior", "Mestrado"])
+        })
+        
+        
+         
     });
 
     it.only('Combo multiplo', () => {
         cy.get('[data-testid=dataEsportes]')
             .select(['futebol', 'Karate'])
 
-        //TODO validar opções selecionadas do combo multiplo
+        cy.get('[data-testid=dataEsportes]').then($el => {
+            expect($el.val()).to.be.deep.eq(['futebol', 'Karate'])
+        })
+
+        cy.get('[data-testid=dataEsportes]')
+            .invoke('val')
+            .should('deep.eq',['futebol', 'Karate'])
     });
 
 })
