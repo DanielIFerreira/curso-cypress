@@ -16,5 +16,11 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
+require('cypress-xpath')
+//Tag para colocar o id como prioridade de busca de locators
+//Cypress.SelectorPlayground.defaults({
+  //  selectorPriority: ['id', 'class', 'attributes'],
+  //})
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
