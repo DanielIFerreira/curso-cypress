@@ -1,13 +1,18 @@
 import loc from '../support/locators'
 
 import '../support/commandsContas'
+
 describe('Deve testar a nivel funcional',() =>{
     
     before(() =>{
         cy.visit('https://barrigareact.wcaquino.me');
         cy.login('curso@teste.com','1234')
-        cy.resetApp()
       
+    })
+
+    beforeEach(()=>{
+        cy.get(loc.MENU.Home).click()
+        cy.resetApp()
     })
    
     it('Deve inserir uma conta', () => {
@@ -19,12 +24,57 @@ describe('Deve testar a nivel funcional',() =>{
     
     it('Deve alterar conta existente', () => {
         cy.acessarMenuConta()
-        cy.xpath(loc.CONTAS.XP_BTN_Alterar).click()
+        cy.xpath(loc.CONTAS.Fn_XP_BTN_Alterar('Conta para alterar')).click()
         cy.get(loc.CONTAS.Nome)
             .clear()
             .type('Conta alterada')
         cy.get(loc.CONTAS.BTN_Salvar).click()
-        cy.get('.toast-message').should('contain','Conta atualizada com sucesso!')
+        cy.get(loc.Message).should('contain','Conta atualizada com sucesso!')
     });
+
+    it('Não deve criar uma conta com o mesmo nome',() =>{
+        cy.acessarMenuConta()
+        cy.inserirConta('Conta mesmo nome')
+        cy.get(loc.CONTAS.BTN_Salvar).click()
+        cy.get(loc.Message).should('contain', 'status code 400')
+    })
+
+    it('Deve criar nova transição', () => {
+        cy.acessarMenuConta()
+        cy.get(loc.MENU.Movimentacao).click()
+        cy.get(loc.MOVIMENTACAO.Descriccao).type('Teste')
+        cy.get(loc.MOVIMENTACAO.Valor).type('123')
+        cy.get(loc.MOVIMENTACAO.Interessado).type('Inter')
+        cy.get(loc.MOVIMENTACAO.DropDawn).select('Conta para movimentacoes')
+        cy.get(loc.MOVIMENTACAO.StatusPago).click()
+        cy.get(loc.MOVIMENTACAO.Btn_Salvar).click()
+        cy.get(loc.Message).should('contain', 'sucesso!')
+        cy.get(loc.MOVIMENTACAO.VerificaSeExiste).should('have.length', 7)
+        
+        
+    });
+
+    it.only('Deve pegar o saldo da conta', ()=>{
+        cy.get(loc.MENU.Home).click()
+        cy.xpath(loc.SALDO.FnXpSaldoConta('Conta para saldo')).should('contain', '534,00')
+
+        cy.get(loc.MENU.Movimentacao).click()
+        cy.xpath(loc.MOVIMENTACAO.FnXpAlterar('Movimentacao 1, calculo saldo')).click()
+        cy.wait(1000)
+        cy.get(loc.MOVIMENTACAO.StatusPago).click()
+        cy.get(loc.MOVIMENTACAO.Btn_Salvar).click()
+        cy.get(loc.Message).should('contain', 'sucesso!')
+        
+        cy.get(loc.MENU.Home).click()
+        cy.xpath(loc.SALDO.FnXpSaldoConta('Conta para saldo')).should('contain', '534,00')
+   
+    })
+
+    it('Remover conta existente',()=>{
+        
+        cy.get(loc.MENU.Remover).click()
+        cy.xpath(loc.REMOVER.FnXpRenomer('Movimentacao para exclusao')).click()
+        cy.get(loc.Message).should('contain', 'sucesso')
+    })
 }) 
 
