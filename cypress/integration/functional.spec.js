@@ -40,7 +40,7 @@ describe('Deve testar a nivel funcional',() =>{
     })
 
     it('Deve criar nova transição', () => {
-        cy.acessarMenuConta()
+        //cy.acessarMenuConta()
         cy.get(loc.MENU.Movimentacao).click()
         cy.get(loc.MOVIMENTACAO.Descriccao).type('Teste')
         cy.get(loc.MOVIMENTACAO.Valor).type('123')
@@ -51,29 +51,26 @@ describe('Deve testar a nivel funcional',() =>{
         cy.get(loc.Message).should('contain', 'sucesso!')
         cy.get(loc.MOVIMENTACAO.VerificaSeExiste).should('have.length', 7)
         
-        
     });
 
-    it.only('Deve pegar o saldo da conta', ()=>{
+    it('Deve pegar o saldo da conta', ()=>{
         cy.get(loc.MENU.Home).click()
         cy.xpath(loc.SALDO.FnXpSaldoConta('Conta para saldo')).should('contain', '534,00')
-
-        cy.get(loc.MENU.Movimentacao).click()
-        cy.xpath(loc.MOVIMENTACAO.FnXpAlterar('Movimentacao 1, calculo saldo')).click()
+        cy.get(loc.MENU.EXTRATO).click()
         cy.wait(1000)
+        cy.xpath(loc.EXTRATO.FN_XP_ALTERAR_ELEMENTO('Movimentacao 1, calculo saldo')).click()
+        cy.get(loc.MOVIMENTACAO.Descriccao).should('have.value', 'Movimentacao 1, calculo saldo')
         cy.get(loc.MOVIMENTACAO.StatusPago).click()
         cy.get(loc.MOVIMENTACAO.Btn_Salvar).click()
-        cy.get(loc.Message).should('contain', 'sucesso!')
-        
+        cy.get(loc.Message).should('contain', 'Movimentação inserida com sucesso!')
         cy.get(loc.MENU.Home).click()
         cy.xpath(loc.SALDO.FnXpSaldoConta('Conta para saldo')).should('contain', '534,00')
-   
+    
     })
 
     it('Remover conta existente',()=>{
-        
         cy.get(loc.MENU.Remover).click()
-        cy.xpath(loc.REMOVER.FnXpRenomer('Movimentacao para exclusao')).click()
+        cy.xpath(loc.EXTRATO.FN_XP_REMOVER_ELEMENTO('Movimentacao para exclusao')).click()
         cy.get(loc.Message).should('contain', 'sucesso')
     })
 }) 
